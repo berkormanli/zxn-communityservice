@@ -27,3 +27,12 @@ Not yet, probably never.
 - 2 types of work to do. Brooming and trimming
 - Command based resource, drag&drop and ready to go.
 -
+
+## Installation
+Insert this to your database
+```
+CREATE TABLE IF NOT EXISTS `communityservice` (
+  `citizenid` varchar(255) NOT NULL,
+  `actions_remaining` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
