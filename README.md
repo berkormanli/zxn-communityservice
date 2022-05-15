@@ -1,2 +1,2 @@
 # zxn-communityservice
-QBCore powered community service resource utili&lt;e
+QBCore powered community service resource utilizes Polyzone
