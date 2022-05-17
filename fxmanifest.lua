@@ -6,7 +6,7 @@ name 'Community Service'
 description 'QBCore powered community service resource'
 author 'zeixna'
 
-version '1.0.0'
+version '1.1.0'
 
 shared_scripts {
 	'config.lua',
@@ -17,7 +17,6 @@ shared_scripts {
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 	'server/sv_main.lua',
-	'server/version_check.lua',
 }
 
 client_scripts {

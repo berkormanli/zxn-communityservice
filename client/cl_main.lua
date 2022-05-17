@@ -15,12 +15,8 @@ local spatulamodel = "bkr_prop_coke_spatula_04"
 local spatula_net = nil
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+	Wait(1000)
     PlayerData = QBCore.Functions.GetPlayerData()
-	TriggerServerEvent('zxn-communityservice:server:checkIfSentenced')
-end)
-
-Citizen.CreateThread(function()
-	Citizen.Wait(2000)
 	TriggerServerEvent('zxn-communityservice:server:checkIfSentenced')
 end)
 
@@ -112,27 +108,25 @@ end
 
 local function DisableViolentActions()
 
-	local playerPed = PlayerPedId()
-
 	if disable_actions == true then
 		DisableAllControlActions(0)
 	end
 
-	RemoveAllPedWeapons(playerPed, true)
+	RemoveAllPedWeapons(PlayerPedId(), true)
 
 	DisableControlAction(2, 37, true) -- disable weapon wheel (Tab)
-	DisablePlayerFiring(playerPed,true) -- Disables firing all together if they somehow bypass inzone Mouse Disable
+	DisablePlayerFiring(PlayerPedId(),true) -- Disables firing all together if they somehow bypass inzone Mouse Disable
     DisableControlAction(0, 106, true) -- Disable in-game mouse controls
     DisableControlAction(0, 140, true)
 	DisableControlAction(0, 141, true)
 	DisableControlAction(0, 142, true)
 
 	if IsDisabledControlJustPressed(2, 37) then --if Tab is pressed, send error message
-		SetCurrentPedWeapon(playerPed,GetHashKey("WEAPON_UNARMED"),true) -- if tab is pressed it will set them to unarmed (this is to cover the vehicle glitch until I sort that all out)
+		SetCurrentPedWeapon(PlayerPedId(),GetHashKey("WEAPON_UNARMED"),true) -- if tab is pressed it will set them to unarmed (this is to cover the vehicle glitch until I sort that all out)
 	end
 
 	if IsDisabledControlJustPressed(0, 106) then --if LeftClick is pressed, send error message
-		SetCurrentPedWeapon(playerPed,GetHashKey("WEAPON_UNARMED"),true) -- If they click it will set them to unarmed
+		SetCurrentPedWeapon(PlayerPedId(),GetHashKey("WEAPON_UNARMED"),true) -- If they click it will set them to unarmed
 	end
 
 end
@@ -154,8 +148,6 @@ end
 
 RegisterNetEvent('zxn-communityservice:client:inCommunityService')
 AddEventHandler('zxn-communityservice:client:inCommunityService', function(actions_remaining)
-	local playerPed = PlayerPedId()
-
 	if isSentenced then
 		return
 	end
@@ -164,24 +156,24 @@ AddEventHandler('zxn-communityservice:client:inCommunityService', function(actio
 
 	FillActionTable()
 
-	SetEntityCoords(playerPed, Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z)
-	SetEntityHeading(playerPed, Config.ServiceLocation.h)
+	SetEntityCoords(PlayerPedId(), Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z)
+	SetEntityHeading(PlayerPedId(), Config.ServiceLocation.h)
 	isSentenced = true
 	communityServiceFinished = false
 
     TriggerEvent('zxn-communityservice:client:sendToCommunityService')
 
 	while actionsRemaining > 0 and communityServiceFinished ~= true do
-		if IsPedInAnyVehicle(playerPed, false) then
-			ClearPedTasksImmediately(playerPed)
+		if IsPedInAnyVehicle(PlayerPedId(), false) then
+			ClearPedTasksImmediately(PlayerPedId())
 		end
 
 		Citizen.Wait(20000)
 
-		if #(GetEntityCoords(playerPed) - vector3(Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z)) > 45 then
-			SetEntityCoords(playerPed, Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z)
-			SetEntityHeading(playerPed, Config.ServiceLocation.h)
-            QBCore.Functions.Notify(Lang:t('notify.escape_string'), 5000, "error")
+		if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z)) > 45 then
+			SetEntityCoords(PlayerPedId(), Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z)
+			SetEntityHeading(PlayerPedId(), Config.ServiceLocation.h)
+            QBCore.Functions.Notify(Lang:t('notify.escape_string'), "error", 5000)
 			TriggerServerEvent('zxn-communityservice:server:extendService')
 			actionsRemaining = actionsRemaining + Config.ServiceExtensionOnEscape
 		end
@@ -189,8 +181,8 @@ AddEventHandler('zxn-communityservice:client:inCommunityService', function(actio
 	end
 
 	TriggerServerEvent('zxn-communityservice:server:finishCommunityService', -1)
-	SetEntityCoords(playerPed, Config.ReleaseLocation.x, Config.ReleaseLocation.y, Config.ReleaseLocation.z)
-	SetEntityHeading(playerPed, Config.ReleaseLocation.h)
+	SetEntityCoords(PlayerPedId(), Config.ReleaseLocation.x, Config.ReleaseLocation.y, Config.ReleaseLocation.z)
+	SetEntityHeading(PlayerPedId(), Config.ReleaseLocation.h)
 	isSentenced = false
 end)
 
@@ -206,7 +198,7 @@ end)
 RegisterNetEvent('zxn-communityservice:client:sendToCommunityService')
 AddEventHandler('zxn-communityservice:client:sendToCommunityService', function()
     Citizen.CreateThread(function()
-        while actionsRemaining > 0 and isSentenced  do
+        while actionsRemaining > 0 and isSentenced do
             :: start_over ::
             Citizen.Wait(1)
             DrawAvailableActions()

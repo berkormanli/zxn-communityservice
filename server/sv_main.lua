@@ -147,7 +147,6 @@ AddEventHandler('zxn-communityservice:server:checkIfSentenced', function()
 	local _source = source
 	local ply = QBCore.Functions.GetPlayer(_source)
 	local citizenid = ply.PlayerData.citizenid
-    print(citizenid)
 
     if Config.SQL == "ghmattimysql" then
         exports['ghmattimysql']:execute('SELECT * FROM communityservice WHERE citizenid = @citizenid', {
@@ -159,7 +158,6 @@ AddEventHandler('zxn-communityservice:server:checkIfSentenced', function()
         end)
     elseif Config.SQL == "mysql" then
         MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE citizenid = ?', {citizenid}, function(result)
-            print(result)
             if result[1] ~= nil and result[1].actions_remaining > 0 then
                 TriggerClientEvent('zxn-communityservice:client:inCommunityService', _source, tonumber(result[1].actions_remaining))
             end
@@ -167,7 +165,7 @@ AddEventHandler('zxn-communityservice:server:checkIfSentenced', function()
     end
 end)
 
-QBCore.Commands.Add("cancelcommunity", "Cancel a community service", {{name="id", help="Player ID"}}, true, function(source, args) -- name, help, arguments, argsrequired,  end sonuna persmission
+QBCore.Commands.Add("cancelcommunity", "Bir Oyuncunın Kamu Cezasını İptal Et", {{name="id", help="Oyuncu ID"}}, true, function(source, args) -- name, help, arguments, argsrequired,  end sonuna persmission
 	local xPlayer = QBCore.Functions.GetPlayer(source)
 	local target = tonumber(args[1])
 	if xPlayer.PlayerData.job.name == "police" then
@@ -181,7 +179,7 @@ QBCore.Commands.Add("cancelcommunity", "Cancel a community service", {{name="id"
 	end
 end)
 
-QBCore.Commands.Add("community", "Send a player to a community service", {{name="id", help="Player ID"}, {name="count", help="Community Service mount"}}, true, function(source, args) -- name, help, arguments, argsrequired,  end sonuna persmission
+QBCore.Commands.Add("community", "Bir Oyuncunın Kamu Cezasını İptal Et", {{name="id", help="Player ID"}, {name="count", help="Community Service mount"}}, true, function(source, args) -- name, help, arguments, argsrequired,  end sonuna persmission
 	local xPlayer = QBCore.Functions.GetPlayer(source)
 	local target = tonumber(args[1])
     local amount = tonumber(args[2])
