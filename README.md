@@ -18,7 +18,7 @@ QBCore powered community service resource (a very basic one.)
 
 ## Dependencies
 - [qb-core](https://github.com/qbcore-framework/qb-core)
-- [ghmattimysql]/[oxmysql]
+- [ghmattimysql] or [oxmysql](https://github.com/overextended/oxmysql)
 
 ## Demo
 Not yet, probably never.
